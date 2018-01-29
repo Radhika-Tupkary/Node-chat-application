@@ -4,9 +4,10 @@ const express = require('express');
 const socketIO = require('socket.io');
 let app = express();
 
+let server = http.createServer(app);
+
 const publicPath = path.join(__dirname, '../public');
 
-let server = http.createServer(app);
 let io = socketIO(server);
 
 app.use(express.static(publicPath));
@@ -18,6 +19,18 @@ console.log(__dirname + '/../public');
 
 io.on('connection', (socket) => {
     console.log("New user connected");
+
+    socket.emit('newMessage', {
+        from: "sush@magic.com",
+        text: "love you",
+        createdAt: "Dec 12, 2079"
+    });
+
+
+    socket.on('createMessage', function(messageCreate){
+       console.log('messageCreate', messageCreate);
+    });
+
 
     socket.on('disconnect', () => {
         console.log("User was disconnected");
