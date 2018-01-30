@@ -3,8 +3,8 @@ socket.on('connect', function () {
     console.log("Connected to server");
 
     socket.emit('createMessage', {
-        to: "sushant mahajan",
-        text:"Hi, lets have sex tonight?"
+        to: "Julie Ray",
+        text:"Yep, that works for me!"
     })
 
 });
