@@ -1,6 +1,9 @@
 const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
+const path = require('path');
+
+const publicPath = path.join(__dirname, '../public');
 
 let app = express();
 let server = http.createServer(app);
@@ -8,17 +11,19 @@ let io = socketIO(server);
 
 const port = process.env.PORT || 3000;
 
+app.use(express.static(publicPath));
+
 io.on('connection', (socket) => {
     console.log("New user connected");
 
-    socket.emit('newMessage', {
-        from: "julie@example.com",
-        text: "Hi, lets meet tonight?",
-        createdAt: "Dec 12, 2079"
-    });
+    socket.on('createMessage', function(message){
+       console.log('server received new message', message);
 
-    socket.on('createMessage', function(messageCreate){
-       console.log('messageCreate', messageCreate);
+        io.emit('newMessage', {
+            from: message.from,
+            text:message.text,
+            createdAT:new Date().getTime()
+        })
     });
 
     socket.on('disconnect', () => {
